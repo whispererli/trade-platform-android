@@ -1,6 +1,10 @@
-package com.trade_platform.core;
+package com.tradeplatform.core;
 
 import java.util.List;
+
+import com.trade_platform.core.R;
+import com.trade_platform.core.R.id;
+import com.trade_platform.core.R.layout;
 
 import android.app.Fragment;
 import android.content.Intent;

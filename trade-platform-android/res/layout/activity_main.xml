@@ -3,9 +3,9 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    tools:context="com.trade_platform.core.MainActivity">
+    tools:context="com.tradeplatform.core.MainActivity">
 
-    <com.example.trader_platform.RefreshableView
+    <com.tradeplatform.core.RefreshableView
         android:id="@+id/refreshable_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
@@ -15,7 +15,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
         </ListView>
-    </com.example.trader_platform.RefreshableView>
+    </com.tradeplatform.core.RefreshableView>
 
 </RelativeLayout>
 

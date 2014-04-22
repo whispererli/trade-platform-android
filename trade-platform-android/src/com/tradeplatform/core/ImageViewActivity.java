@@ -1,4 +1,4 @@
-package com.trade_platform.core;
+package com.tradeplatform.core;
 
 import android.app.Activity;
 import android.content.Intent;
