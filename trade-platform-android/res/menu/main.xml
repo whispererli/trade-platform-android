@@ -1,7 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/user_login"
-          android:icon="@drawable/login"
+          android:icon="@drawable/user"
           android:title="@string/login"
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/make_order"
+          android:icon="@drawable/basket_add"
+          android:title="@string/make_order"
           android:showAsAction="ifRoom"/>
     <item android:id="@+id/action_settings"
           android:orderInCategory="100"

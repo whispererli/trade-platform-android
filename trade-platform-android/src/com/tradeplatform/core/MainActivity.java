@@ -16,6 +16,7 @@ import com.tradeplatform.core.RefreshableView.PullToRefreshListener;
 
 public class MainActivity extends Activity {
 	static final int USER_LOGIN_REQUEST = 1; // The request code
+	static final int MAKE_ORDER_REQUEST = 2; // The request code
 	private static String userToken = null;
 	private static boolean connected = false;
 
@@ -90,6 +91,11 @@ public class MainActivity extends Activity {
 			Intent intent = new Intent(this, LoginActivity.class);
 			intent.putExtra(LoginActivity.USER_TOKEN, userToken);
 			startActivityForResult(intent, USER_LOGIN_REQUEST, null);
+			return true;
+		case R.id.make_order:
+			Intent makeOrder = new Intent(this, MakeOrder.class);
+			makeOrder.putExtra(LoginActivity.USER_TOKEN, userToken);
+			startActivityForResult(makeOrder, MAKE_ORDER_REQUEST, null);
 			return true;
 		case R.id.action_settings:
 			return true;
