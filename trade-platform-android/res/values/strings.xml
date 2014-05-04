@@ -26,7 +26,19 @@
     <string name="name">姓名</string>
     <string name="sex">性别</string>
     <string name="birthday">出生日期</string>
+    <string name="phone">电话</string>
+    <string name="person_description">个人简介</string>
+    <string name="address">地址</string>
+    
+    <string name="minite">分钟</string>
+    <string name="hour">小时</string>
+    <string name="day">天</string>
+    <string name="month">月</string>
+    <string name="year">年</string>
+    
     <string name="ex1">李淼</string>
     <string name="ex2">男</string>
-    <string name="ex3">1985-04-01</string>
+    <string name="ex3">1985–04–01</string>
+    <string name="ex4">123–456–7890</string>
+    <string name="ex5">这个人很懒，什么都没有留下…</string>
 </resources>

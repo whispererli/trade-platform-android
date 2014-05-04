@@ -1,13 +1,7 @@
 package com.tradeplatform.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -15,39 +9,19 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.trade_platform.core.R;
 import com.tradeplatform.core.RefreshableView.PullToRefreshListener;
 
 public class MainActivity extends Activity {
-	private static final String ANIMALS_TABSTRING = "Animals";
-	private static final String FLOWERS_TABSTRING = "Flowers";
-	private static final String DROP_DOWN = "Dropdown";
-	protected static final String THUMBNAIL_IDS = "thumbNailIDs";
-	static final int USER_LOGIN_REQUEST = 000000001; // The request code
+	static final int USER_LOGIN_REQUEST = 1; // The request code
 	private static String userToken = null;
 	private static boolean connected = false;
 
-	private ArrayList<Integer> mThumbIdsFlowers = new ArrayList<Integer>(
-			Arrays.asList(R.drawable.image1, R.drawable.image2,
-					R.drawable.image3, R.drawable.image4, R.drawable.image5,
-					R.drawable.image6, R.drawable.image7, R.drawable.image8,
-					R.drawable.image9, R.drawable.image10, R.drawable.image11,
-					R.drawable.image12));
-
-	private ArrayList<Integer> mThumbIdsAnimals = new ArrayList<Integer>(
-			Arrays.asList(R.drawable.sample_1, R.drawable.sample_2,
-					R.drawable.sample_3, R.drawable.sample_4,
-					R.drawable.sample_5, R.drawable.sample_6,
-					R.drawable.sample_7, R.drawable.sample_0));
-
 	RefreshableView refreshableView;
 	ListView listView;
-	ArrayAdapter<String> adapter;
-	String[] items = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-			"L" };
+	OrderItemAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,32 +33,13 @@ public class MainActivity extends Activity {
 					.add(R.id.container, new Fragment()).commit();
 		}
 
-		final ActionBar tabBar = getActionBar();
-		tabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		tabBar.addTab(tabBar.newTab().setText(DROP_DOWN)
-				.setTabListener(new TabListener(new Fragment())));
-
-		GridFragment flowerFrag = new GridFragment();
-		Bundle args = new Bundle();
-		args.putIntegerArrayList(THUMBNAIL_IDS, mThumbIdsFlowers);
-		flowerFrag.setArguments(args);
-		tabBar.addTab(tabBar.newTab().setText(FLOWERS_TABSTRING)
-				.setTabListener(new TabListener(flowerFrag)));
-
-		GridFragment animalFrag = new GridFragment();
-		args = new Bundle();
-		args.putIntegerArrayList(THUMBNAIL_IDS, mThumbIdsAnimals);
-		animalFrag.setArguments(args);
-		tabBar.addTab(tabBar.newTab().setText(ANIMALS_TABSTRING)
-				.setTabListener(new TabListener(animalFrag)));
-
 		setContentView(R.layout.activity_main);
 		refreshableView = (RefreshableView) findViewById(R.id.refreshable_view);
 		listView = (ListView) findViewById(R.id.refreshable_list_view);
-		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, items);
+
+		adapter = new OrderItemAdapter(getApplicationContext());
 		listView.setAdapter(adapter);
+		loadOrderData();
 		refreshableView.setOnRefreshListener(new PullToRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -102,6 +57,19 @@ public class MainActivity extends Activity {
 		if (networkInfo != null && networkInfo.isConnected()) {
 			connected = true;
 		}
+	}
+
+	private void loadOrderData() {
+		OrderItem se = new OrderItem();
+		se.orderImagePath = "http://www.gravatar.com/avatar/c566fc0ef34130a6f1ed4df9cbb68b94?s=128&d=identicon&r=PG";
+		se.orderCatagory = "电子产品";
+		se.orderName = "Mac book pro";
+		adapter.add(se);
+		se = new OrderItem();
+		se.orderImagePath = "http://www.gravatar.com/avatar/defff916430126c28dd317fc9ca15a9c?s=128&d=identicon&r=PG";
+		se.orderCatagory = "食品";
+		se.orderName = "好巴食";
+		adapter.add(se);
 	}
 
 	@Override
@@ -135,32 +103,6 @@ public class MainActivity extends Activity {
 		if (requestCode == USER_LOGIN_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				userToken = data.getStringExtra(LoginActivity.USER_TOKEN);
-			}
-		}
-	}
-
-	public class TabListener implements ActionBar.TabListener {
-		private final Fragment mFragment;
-
-		public TabListener(Fragment fragment) {
-			mFragment = fragment;
-		}
-
-		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		}
-
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			if (null != mFragment) {
-				ft.replace(R.id.container, mFragment);
-			}
-		}
-
-		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			if (null != mFragment) {
-				ft.remove(mFragment);
 			}
 		}
 	}
