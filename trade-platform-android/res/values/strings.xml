@@ -36,10 +36,19 @@
     <string name="day">天</string>
     <string name="month">月</string>
     <string name="year">年</string>
-    
+
     <string name="ex1">李淼</string>
     <string name="ex2">男</string>
     <string name="ex3">1985–04–01</string>
     <string name="ex4">123–456–7890</string>
     <string name="ex5">这个人很懒，什么都没有留下…</string>
+    
+    <string name="order_desc">描述： 请填写您的购买需求（不超过100个字符）</string>
+    <string name="order_brand">品牌：,Gucci还是…?</string>
+    <string name="order_name">单品名称:红色高跟鞋？Prada杀手包？</string>
+    <string name="order_expect_price">期望价格：您期望多少美元/英镑/欧元…?</string>
+    <string name="order_expect_place">购买地：美国，日本，香港…想从哪里买？</string>
+    <string name="order_expect_date">购入期限</string>
+    <string name="submit_order">提交订单</string>
+    
 </resources>

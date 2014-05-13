@@ -62,14 +62,22 @@ public class MainActivity extends Activity {
 
 	private void loadOrderData() {
 		OrderItem se = new OrderItem();
-		se.orderImagePath = "http://www.gravatar.com/avatar/c566fc0ef34130a6f1ed4df9cbb68b94?s=128&d=identicon&r=PG";
+		se.orderImageBucket = "dev-3dmap-nokia-com";
+		se.orderImagePath = "miao-test/sample_0.jpg";
 		se.orderCatagory = "电子产品";
 		se.orderName = "Mac book pro";
 		adapter.add(se);
 		se = new OrderItem();
-		se.orderImagePath = "http://www.gravatar.com/avatar/defff916430126c28dd317fc9ca15a9c?s=128&d=identicon&r=PG";
+		se.orderImageBucket = "dev-3dmap-nokia-com";
+		se.orderImagePath = "miao-test/sample_1.jpg";
 		se.orderCatagory = "食品";
 		se.orderName = "好巴食";
+		adapter.add(se);
+		se = new OrderItem();
+		se.orderImageBucket = "dev-3dmap-nokia-com";
+		se.orderImagePath = "miao-test/sample_2.jpg";
+		se.orderCatagory = "衣帽";
+		se.orderName = "Nike";
 		adapter.add(se);
 	}
 
@@ -93,7 +101,7 @@ public class MainActivity extends Activity {
 			startActivityForResult(intent, USER_LOGIN_REQUEST, null);
 			return true;
 		case R.id.make_order:
-			Intent makeOrder = new Intent(this, MakeOrder.class);
+			Intent makeOrder = new Intent(this, MakeOrderActivity.class);
 			makeOrder.putExtra(LoginActivity.USER_TOKEN, userToken);
 			startActivityForResult(makeOrder, MAKE_ORDER_REQUEST, null);
 			return true;

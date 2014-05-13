@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/ex1"
+                android:text="@string/ex2"
                 android:inputType="text"
                 android:textSize="16sp" />
         </TableRow>

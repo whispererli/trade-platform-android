@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trade_platform.core.R;
+import com.tradeplatform.aws.S3ImageDownloadTask;
 
 public class OrderItemAdapter extends ArrayAdapter<OrderItem> {
 	private final LayoutInflater mInflater;
@@ -41,23 +42,13 @@ public class OrderItemAdapter extends ArrayAdapter<OrderItem> {
 		}
 
 		OrderItem entity = getItem(position);
-		// need do asynchronously.
-		// URL m;
-		// InputStream i = null;
-		// try {
-		// m = new URL(entity.UserIconPath);
-		// i = (InputStream) m.getContent();
-		// } catch (MalformedURLException e1) {
-		// e1.printStackTrace();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 
 		// Drawable d = Drawable.createFromStream(i, "src");
 		// storage.ivUserIcon.setImageDrawable(d);
 		storage.tvOrderCatagory.setText(entity.orderCatagory);
 		storage.tvOrderName.setText(entity.orderName);
-
+		new S3ImageDownloadTask(entity.orderImageBucket, entity.orderImagePath,
+				storage.ivOrderImage).execute();
 		return row;
 	}
 }
