@@ -32,9 +32,7 @@ public class S3FileListUploadTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		// TODO Auto-generated method stub
 		DefaultAWSCredentialsProviderChain credentialProviderChain = new DefaultAWSCredentialsProviderChain();
-		TransferManager tx = new TransferManager(new BasicAWSCredentials(
-				"AKIAIECG7U2YEP5QSQSA",
-				"fDXQS1lVLBo+IbMmp9w4zuTY9jL1bcLhUORARg0v"));
+		TransferManager tx = new TransferManager(new BasicAWSCredentials());
 		// credentialProviderChain.getCredentials());
 		MultipleFileUpload fileUpload = tx.uploadFileList(bucketName,
 				virtualDirectoryKeyPrefix, directory, files);

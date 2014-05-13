@@ -32,9 +32,7 @@ public class S3ImageDownloadTask extends AsyncTask<Void, Void, Bitmap> {
 		// TODO Auto-generated method stub
 		// DefaultAWSCredentialsProviderChain credentialProviderChain = new
 		// DefaultAWSCredentialsProviderChain();
-		AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials(
-				"AKIAIECG7U2YEP5QSQSA",
-				"fDXQS1lVLBo+IbMmp9w4zuTY9jL1bcLhUORARg0v"));
+		AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials());
 
 		// credentialProviderChain.getCredentials());
 		S3Object object = null;

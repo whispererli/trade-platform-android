@@ -1,4 +1,4 @@
-package com.tradeplatform.core;
+package com.tradeplatform.order;
 
 public class OrderItem {
 	public String orderImageBucket;

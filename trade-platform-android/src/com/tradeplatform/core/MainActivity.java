@@ -13,6 +13,9 @@ import android.widget.ListView;
 
 import com.trade_platform.core.R;
 import com.tradeplatform.core.RefreshableView.PullToRefreshListener;
+import com.tradeplatform.order.MakeOrderActivity;
+import com.tradeplatform.order.OrderItem;
+import com.tradeplatform.order.OrderItemAdapter;
 
 public class MainActivity extends Activity {
 	static final int USER_LOGIN_REQUEST = 1; // The request code

@@ -1,4 +1,4 @@
-package com.tradeplatform.core;
+package com.tradeplatform.order;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,13 +60,14 @@ public class MakeOrderActivity extends Activity {
 		mGridview = (GridView) findViewById(R.id.add_images_grid);
 		listOfImagesPath = new ArrayList<String>();
 		if (listOfImagesPath != null) {
-			mGridview.setAdapter(new ImageAdapter(this, listOfImagesPath));
+			mGridview.setAdapter(new OrderImageListAdapter(this,
+					listOfImagesPath));
 		}
 		mGridview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 				Intent intent = new Intent(MakeOrderActivity.this,
-						ImageViewActivity.class);
+						OrderImageViewActivity.class);
 				intent.putExtra(EXTRA_RES_ID, listOfImagesPath.get((int) id));
 				startActivity(intent);
 			}
@@ -170,7 +171,7 @@ public class MakeOrderActivity extends Activity {
 				Uri uri = data.getData();
 				if (listOfImagesPath != null) {
 					listOfImagesPath.add(getPath(uri));
-					mGridview.setAdapter(new ImageAdapter(this,
+					mGridview.setAdapter(new OrderImageListAdapter(this,
 							listOfImagesPath));
 				}
 			} else {
@@ -190,7 +191,7 @@ public class MakeOrderActivity extends Activity {
 					out.close();
 					if (listOfImagesPath != null) {
 						listOfImagesPath.add(tradePlatformImagePath + fileName);
-						mGridview.setAdapter(new ImageAdapter(this,
+						mGridview.setAdapter(new OrderImageListAdapter(this,
 								listOfImagesPath));
 					}
 				} catch (FileNotFoundException e) {

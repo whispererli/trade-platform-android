@@ -1,4 +1,4 @@
-package com.tradeplatform.core;
+package com.tradeplatform.order;
 
 import android.content.Context;
 import android.view.LayoutInflater;
