@@ -13,18 +13,16 @@ import android.widget.ListView;
 
 import com.trade_platform.core.R;
 import com.tradeplatform.core.RefreshableView.PullToRefreshListener;
+import com.tradeplatform.order.LoadOrdersTask;
 import com.tradeplatform.order.MakeOrderActivity;
-import com.tradeplatform.order.OrderItem;
 import com.tradeplatform.order.OrderItemAdapter;
+import com.tradeplatform.user.UserActivity;
 
 public class MainActivity extends Activity {
-	static final int USER_LOGIN_REQUEST = 1; // The request code
 	static final int MAKE_ORDER_REQUEST = 2; // The request code
-	private static String userToken = null;
 	private static boolean connected = false;
 
 	RefreshableView refreshableView;
-	ListView listView;
 	OrderItemAdapter adapter;
 
 	@Override
@@ -39,11 +37,11 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.activity_main);
 		refreshableView = (RefreshableView) findViewById(R.id.refreshable_view);
-		listView = (ListView) findViewById(R.id.refreshable_list_view);
+		ListView ordersView = (ListView) findViewById(R.id.refreshable_list_view);
 
 		adapter = new OrderItemAdapter(getApplicationContext());
-		listView.setAdapter(adapter);
-		loadOrderData();
+		ordersView.setAdapter(adapter);
+		new LoadOrdersTask(adapter).execute();
 		refreshableView.setOnRefreshListener(new PullToRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -63,27 +61,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void loadOrderData() {
-		OrderItem se = new OrderItem();
-		se.orderImageBucket = "dev-3dmap-nokia-com";
-		se.orderImagePath = "miao-test/sample_0.jpg";
-		se.orderCatagory = "电子产品";
-		se.orderName = "Mac book pro";
-		adapter.add(se);
-		se = new OrderItem();
-		se.orderImageBucket = "dev-3dmap-nokia-com";
-		se.orderImagePath = "miao-test/sample_1.jpg";
-		se.orderCatagory = "食品";
-		se.orderName = "好巴食";
-		adapter.add(se);
-		se = new OrderItem();
-		se.orderImageBucket = "dev-3dmap-nokia-com";
-		se.orderImagePath = "miao-test/sample_2.jpg";
-		se.orderCatagory = "衣帽";
-		se.orderName = "Nike";
-		adapter.add(se);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -99,28 +76,17 @@ public class MainActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()) {
 		case R.id.user_login:
-			Intent intent = new Intent(this, LoginActivity.class);
-			intent.putExtra(LoginActivity.USER_TOKEN, userToken);
-			startActivityForResult(intent, USER_LOGIN_REQUEST, null);
+			Intent intent = new Intent(this, UserActivity.class);
+			startActivity(intent, null);
 			return true;
 		case R.id.make_order:
 			Intent makeOrder = new Intent(this, MakeOrderActivity.class);
-			makeOrder.putExtra(LoginActivity.USER_TOKEN, userToken);
 			startActivityForResult(makeOrder, MAKE_ORDER_REQUEST, null);
 			return true;
 		case R.id.action_settings:
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == USER_LOGIN_REQUEST) {
-			if (resultCode == RESULT_OK) {
-				userToken = data.getStringExtra(LoginActivity.USER_TOKEN);
-			}
 		}
 	}
 }

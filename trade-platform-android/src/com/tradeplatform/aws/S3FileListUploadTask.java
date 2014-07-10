@@ -1,83 +1,66 @@
 package com.tradeplatform.aws;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-
-import android.os.AsyncTask;
+import java.util.UUID;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.event.ProgressEvent;
-import com.amazonaws.event.ProgressListener;
-import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.Upload;
+import com.amazonaws.services.s3.transfer.model.UploadResult;
 
-public class S3FileListUploadTask extends AsyncTask<Void, Void, Void> {
-	private String bucketName = null;
-	private String virtualDirectoryKeyPrefix = null;
-	private File directory = null;
-	private List<File> files = null;
+public class S3FileListUploadTask {
+	public static final String S3_TEST_BUCKET = "trade-platform-order-images";
+	public static final String S3_TEST_PATH = "/";
 
-	public S3FileListUploadTask(String bucketName,
-			String virtualDirectoryKeyPrefix, File directory, List<File> files) {
-		this.bucketName = bucketName;
-		this.virtualDirectoryKeyPrefix = virtualDirectoryKeyPrefix;
-		this.directory = directory;
-		this.files = files;
-	}
+	public static List<String> uploadFileList(List<String> files) {
+		List<String> imageKeys = new ArrayList<String>();
+		// TODO credentialProviderChain.getCredentials());
+		TransferManager tx = new TransferManager(new BasicAWSCredentials(
+				AWSCredential.accessKey, AWSCredential.securitKey));
+		for (String file : files) {
+			try {
+				String virtualDirectoryKeyPrefix = S3_TEST_PATH
+						+ UUID.randomUUID().toString();
+				Upload fileUpload = tx.upload(S3_TEST_BUCKET,
+						virtualDirectoryKeyPrefix, new File(file));
 
-	@Override
-	protected Void doInBackground(Void... params) {
-		// TODO Auto-generated method stub
-		DefaultAWSCredentialsProviderChain credentialProviderChain = new DefaultAWSCredentialsProviderChain();
-		TransferManager tx = new TransferManager(new BasicAWSCredentials());
-		// credentialProviderChain.getCredentials());
-		MultipleFileUpload fileUpload = tx.uploadFileList(bucketName,
-				virtualDirectoryKeyPrefix, directory, files);
-
-		// You can poll your transfer's status to check its progress
-		if (fileUpload.isDone() == false) {
-			System.out.println("Transfer: " + fileUpload.getDescription());
-			System.out.println("  - State: " + fileUpload.getState());
-			System.out.println("  - Progress: "
-					+ fileUpload.getProgress().getBytesTransferred());
-		}
-
-		// Transfers also allow you to set a <code>ProgressListener</code>
-		// to
-		// receive
-		// asynchronous notifications about your transfer's progress.
-		fileUpload.addProgressListener(new ProgressListener() {
-
-			@Override
-			public void progressChanged(ProgressEvent arg0) {
-				// TODO Auto-generated method stub
-
+				UploadResult result = fileUpload.waitForUploadResult();
+				imageKeys.add(result.getKey());
+			} catch (AmazonServiceException ase) {
+				System.out
+						.println("Caught an AmazonServiceException, which"
+								+ " means your request made it "
+								+ "to Amazon S3, but was rejected with an error response"
+								+ " for some reason.");
+				System.out.println("Error Message:    " + ase.getMessage());
+				System.out.println("HTTP Status Code: " + ase.getStatusCode());
+				System.out.println("AWS Error Code:   " + ase.getErrorCode());
+				System.out.println("Error Type:       " + ase.getErrorType());
+				System.out.println("Request ID:       " + ase.getRequestId());
+				return imageKeys;
+			} catch (AmazonClientException ace) {
+				System.out
+						.println("Caught an AmazonClientException, which means"
+								+ " the client encountered "
+								+ "an internal error while trying to "
+								+ "communicate with S3, "
+								+ "such as not being able to access the network.");
+				System.out.println("Error Message: " + ace.getMessage());
+				return imageKeys;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return imageKeys;
 			}
 
-		});
-		// Or you can block the current thread and wait for your transfer to
-		// to complete. If the transfer fails, this method will throw an
-		// AmazonClientException or AmazonServiceException detailing the
-		// reason.
-		try {
-			fileUpload.waitForCompletion();
-		} catch (AmazonServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (AmazonClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
 		// After the upload is complete, call shutdownNow to release the
 		// resources.
 		tx.shutdownNow();
-		return null;
+		return imageKeys;
 	}
 }

@@ -25,25 +25,34 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.trade_platform.core.R;
+import com.tradeplatform.user.UserTokenUtil;
 
 public class MakeOrderActivity extends Activity {
 
 	public static final String USER_TOKEN = "userToken"; // The request code
+	private String userToken;
 	public static final String EXTRA_RES_ID = "pos"; // The request code
 	private static final int SELECT_PICTURE = 1; // The request code
 	private static final int SELECT_CAMERA = 2; // The request code
-	private EditText expectDateSelector;
+	private EditText orderExpectDate;
+	private EditText orderDescription;
+	private Spinner orderCatagory;
+	private EditText orderExpectPrice;
+	private EditText orderExpectPlace;
 	private ImageButton addImage;
+	private Button submit;
 	private GridView mGridview;
-	// private DateFormat dateFormat = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	private static final String tradePlatformImagePath = Environment
 			.getExternalStorageDirectory().getAbsolutePath() + "/OrderImages/";
 	private List<String> listOfImagesPath;
@@ -51,39 +60,41 @@ public class MakeOrderActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Intent intent = getIntent();
-		String userToken = intent.getStringExtra(USER_TOKEN);
+		String userToken = UserTokenUtil.getUserToken(this);
 		setContentView(R.layout.make_order);
-		expectDateSelector = (EditText) findViewById(R.id.expectDate);
-		addImage = (ImageButton) findViewById(R.id.add_image);
 
+		orderExpectDate = (EditText) findViewById(R.id.order_expect_date);
+		orderDescription = (EditText) findViewById(R.id.order_desc);
+		orderCatagory = (Spinner) findViewById(R.id.order_catagory);
+		orderExpectPrice = (EditText) findViewById(R.id.order_expect_price);
+		orderExpectPlace = (EditText) findViewById(R.id.order_expect_place);
+
+		addImage = (ImageButton) findViewById(R.id.add_image);
+		submit = (Button) findViewById(R.id.submit);
 		mGridview = (GridView) findViewById(R.id.add_images_grid);
-		listOfImagesPath = new ArrayList<String>();
-		if (listOfImagesPath != null) {
-			mGridview.setAdapter(new OrderImageListAdapter(this,
-					listOfImagesPath));
-		}
-		mGridview.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
-				Intent intent = new Intent(MakeOrderActivity.this,
-						OrderImageViewActivity.class);
-				intent.putExtra(EXTRA_RES_ID, listOfImagesPath.get((int) id));
-				startActivity(intent);
-			}
-		});
+
 		if (userToken != null) {
 			init();
 		} else {
-			// TODO: make the user to login
-			init();
+			Toast.makeText(this, R.string.login_toast, Toast.LENGTH_SHORT)
+					.show();
+			setResult(Activity.RESULT_CANCELED, null);
+			finish();
 		}
 	}
 
 	private void init() {
 		// setup expect date selector.
 		// expectDateSelector.setInputType(InputType.TYPE_NULL);
-		expectDateSelector
+		ArrayAdapter<String> adapter = new ArrayAdapter(this,
+				android.R.layout.simple_spinner_item,
+				OrderCatagories.getOrderCatagories());
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		orderCatagory.setAdapter(adapter);
+		orderCatagory.setSelection(OrderCatagories.getDefaultSelection());
+		orderExpectDate
 				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
 					@Override
@@ -99,9 +110,9 @@ public class MakeOrderActivity extends Activity {
 												int year, int monthOfYear,
 												int dayOfMonth) {
 											// TODO Auto-generated method stub
-											expectDateSelector.setText(year
-													+ "/" + (monthOfYear + 1)
-													+ "/" + dayOfMonth);
+											orderExpectDate.setText(year + "-"
+													+ (monthOfYear + 1) + "-"
+													+ dayOfMonth);
 										}
 									}, c.get(Calendar.YEAR), c
 											.get(Calendar.MONTH), c
@@ -111,7 +122,7 @@ public class MakeOrderActivity extends Activity {
 					}
 				});
 
-		expectDateSelector.setOnClickListener(new View.OnClickListener() {
+		orderExpectDate.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -124,8 +135,8 @@ public class MakeOrderActivity extends Activity {
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								// TODO Auto-generated method stub
-								expectDateSelector.setText(year + "/"
-										+ (monthOfYear + 1) + "/" + dayOfMonth);
+								orderExpectDate.setText(year + "-"
+										+ (monthOfYear + 1) + "-" + dayOfMonth);
 							}
 						}, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c
 								.get(Calendar.DAY_OF_MONTH)).show();
@@ -158,6 +169,31 @@ public class MakeOrderActivity extends Activity {
 								}
 							}
 						}).create().show();
+			}
+		});
+		listOfImagesPath = new ArrayList<String>();
+		mGridview.setAdapter(new OrderImageListAdapter(this, listOfImagesPath));
+		mGridview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				Intent intent = new Intent(MakeOrderActivity.this,
+						OrderImageViewActivity.class);
+				intent.putExtra(EXTRA_RES_ID, listOfImagesPath.get((int) id));
+				startActivity(intent);
+			}
+		});
+
+		submit.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				new SubmitOrderTask(new UserOrder(null, orderExpectDate.getText()
+						.toString(), orderDescription.getText().toString(),
+						OrderCatagories.getId((String) orderCatagory
+								.getSelectedItem()), orderExpectPrice.getText()
+								.toString(), orderExpectPlace.getText()
+								.toString(), listOfImagesPath),
+						getApplicationContext(), userToken).execute();
 			}
 		});
 	}

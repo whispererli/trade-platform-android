@@ -17,28 +17,25 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 public class S3ImageDownloadTask extends AsyncTask<Void, Void, Bitmap> {
 	private String bucketName = null;
-	private String virtualDirectoryKeyPrefix = null;
+	private String s3Path = null;
 	private ImageView view = null;
 
 	public S3ImageDownloadTask(String bucketName,
-			String virtualDirectoryKeyPrefix, ImageView view) {
+			String s3Path, ImageView view) {
 		this.bucketName = bucketName;
-		this.virtualDirectoryKeyPrefix = virtualDirectoryKeyPrefix;
+		this.s3Path = s3Path;
 		this.view = view;
 	}
 
 	@Override
 	protected Bitmap doInBackground(Void... params) {
 		// TODO Auto-generated method stub
-		// DefaultAWSCredentialsProviderChain credentialProviderChain = new
-		// DefaultAWSCredentialsProviderChain();
-		AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials());
-
-		// credentialProviderChain.getCredentials());
+		AmazonS3Client client = new AmazonS3Client(new BasicAWSCredentials(
+				AWSCredential.accessKey, AWSCredential.securitKey));
 		S3Object object = null;
 		try {
 			object = client.getObject(new GetObjectRequest(bucketName,
-					virtualDirectoryKeyPrefix));
+                    s3Path));
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException, which"
 					+ " means your request made it "

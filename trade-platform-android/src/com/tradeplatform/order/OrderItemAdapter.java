@@ -1,6 +1,9 @@
 package com.tradeplatform.order;
 
+import java.util.List;
+
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +14,13 @@ import android.widget.TextView;
 import com.trade_platform.core.R;
 import com.tradeplatform.aws.S3ImageDownloadTask;
 
-public class OrderItemAdapter extends ArrayAdapter<OrderItem> {
+public class OrderItemAdapter extends ArrayAdapter<UserOrder> {
 	private final LayoutInflater mInflater;
+	Context context;
 
 	public OrderItemAdapter(Context context) {
 		super(context, 0);
+		this.context = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -24,37 +29,58 @@ public class OrderItemAdapter extends ArrayAdapter<OrderItem> {
 	final public View getView(final int position, View convertView,
 			ViewGroup parent) {
 
-		ItemStorage storage;
+		OrderViewGroup orderView;
 		View row = convertView;
 
 		if (row == null) {
 			row = mInflater.inflate(R.layout.order_general, parent, false);
 
-			storage = new ItemStorage();
-			storage.ivOrderImage = (ImageView) row
+			orderView = new OrderViewGroup();
+			orderView.ivOrderImage = (ImageView) row
 					.findViewById(R.id.orderImage);
-			storage.tvOrderCatagory = (TextView) row
+			orderView.tvOrderCatagory = (TextView) row
 					.findViewById(R.id.orderCatagory);
-			storage.tvOrderName = (TextView) row.findViewById(R.id.orderName);
-			row.setTag(storage);
+			orderView.tvOrderDesc = (TextView) row
+					.findViewById(R.id.orderDescription);
+			orderView.tvOrderExpPrice = (TextView) row
+					.findViewById(R.id.orderExpectPrice);
+			orderView.tvOrderExpPlace = (TextView) row
+					.findViewById(R.id.orderExpectPlace);
+			orderView.tvOrderExpDate = (TextView) row
+					.findViewById(R.id.orderExpectDate);
+			row.setTag(R.layout.order_general,orderView);
 		} else {
-			storage = (ItemStorage) row.getTag();
+			orderView = (OrderViewGroup) row.getTag(R.layout.order_general);
 		}
 
-		OrderItem entity = getItem(position);
+		UserOrder order = getItem(position);
 
-		// Drawable d = Drawable.createFromStream(i, "src");
-		// storage.ivUserIcon.setImageDrawable(d);
-		storage.tvOrderCatagory.setText(entity.orderCatagory);
-		storage.tvOrderName.setText(entity.orderName);
-		new S3ImageDownloadTask(entity.orderImageBucket, entity.orderImagePath,
-				storage.ivOrderImage).execute();
+		orderView.tvOrderCatagory.setText(OrderCatagories.getName(order
+				.getCatagoryId()));
+		orderView.tvOrderDesc.setText(order.getOrderDescription());
+		orderView.tvOrderExpPrice.setText(order.getOrderExpectPrice());
+		orderView.tvOrderExpPlace.setText(order.getOrderExpectPlace());
+		orderView.tvOrderExpDate.setText(order.getOrderExpectDate());
+
+        row.setTag(R.string.order_id, order.getOrderId());
+
+		List<String> images = order.getListOfImagesPath();
+		if (images != null && images.size() > 0) {
+			new S3ImageDownloadTask("trade-platform-order-images",
+					images.get(0), orderView.ivOrderImage).execute();
+		} else {
+			orderView.ivOrderImage.setImageBitmap(BitmapFactory.decodeResource(
+					context.getResources(), R.drawable.default_order));
+		}
 		return row;
 	}
 }
 
-class ItemStorage {
+class OrderViewGroup {
+	TextView tvOrderExpDate;
+	TextView tvOrderExpPlace;
+	TextView tvOrderExpPrice;
 	ImageView ivOrderImage;
 	TextView tvOrderCatagory;
-	TextView tvOrderName;
+	TextView tvOrderDesc;
 }

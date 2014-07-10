@@ -61,32 +61,12 @@
       android:ems="10"
       android:inputType="textPassword" />
 
-   <TextView
-      android:id="@+id/attemptReminder"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignLeft="@+id/password"
-      android:layout_below="@+id/password"
-      android:layout_marginLeft="30dp"
-      android:layout_marginTop="48dp"
-      android:text="@string/attempts"
-      android:textAppearance="?android:attr/textAppearanceMedium" />
-
-   <TextView
-      android:id="@+id/attemptReminderNum"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignRight="@+id/welcome"
-      android:layout_alignTop="@+id/attemptReminder"
-      android:text="TextView" />
-
    <Button
        android:id="@+id/loginButton"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_alignBaseline="@+id/registButton"
        android:layout_alignBottom="@+id/registButton"
-       android:layout_toRightOf="@+id/attemptReminderNum"
        android:onClick="login"
        android:text="@string/login" />
 
@@ -95,8 +75,9 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_alignParentBottom="true"
-       android:layout_marginBottom="56dp"
-       android:layout_toLeftOf="@+id/welcome"
+       android:layout_alignRight="@+id/userNameInput"
+       android:layout_marginBottom="73dp"
+       android:layout_marginRight="16dp"
        android:onClick="regist"
        android:text="@string/regist" />
 

@@ -5,31 +5,27 @@
     android:orientation="vertical" >
 
     <EditText
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:id="@+id/order_desc"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/order_desc"
-        android:inputType="text"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
+        android:inputType="textMultiLine"
+        android:textSize="16sp" 
+        android:lines="8"
+        android:minLines="6"
+        android:gravity="top|left"
+        android:maxLines="10"
+        android:scrollbars="vertical" />
+    
+    <Spinner
+        android:id="@+id/order_catagory"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/order_brand"
-        android:inputType="text"
+        android:prompt="@string/catagory_select_tip"
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/order_name"
-        android:inputType="text"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/textView10"
+        android:id="@+id/order_expect_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/order_expect_price"
@@ -37,7 +33,7 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/textView11"
+        android:id="@+id/order_expect_place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/order_expect_place"
@@ -45,18 +41,17 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/expectDate"
+        android:id="@+id/order_expect_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/order_expect_date"
         android:inputType="date" >
-
         <requestFocus />
     </EditText>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit_order" />
