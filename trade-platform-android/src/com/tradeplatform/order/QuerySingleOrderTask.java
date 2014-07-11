@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.trade_platform.core.R;
-import com.tradeplatform.aws.S3ImageDownloadTask;
+import com.tradeplatform.aws.S3ImageListDownloadTask;
 import com.tradeplatform.web.TradePlatformWebClient;
 
 import org.json.JSONException;
